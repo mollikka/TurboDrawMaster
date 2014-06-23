@@ -1,6 +1,7 @@
 import sys
 import pygame
 
+import overlay
 import overlays
 from picture import Picture
 from user_state import User
@@ -16,7 +17,7 @@ class Manager(object):
         self.user = User()
 
         self.active_overlay = None
-        self.test_overlay = overlays.Overlay(self.user)
+        self.test_overlay = overlay.Overlay(self.user)
         self.color_picker_overlay = overlays.ColorPickerOverlay(self.user)
 
     def get_active_color(self):
