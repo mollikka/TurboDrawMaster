@@ -50,7 +50,7 @@ class Manager(object):
 
         return pic_surf
 
-    def handle(self, event):
+    def handle_input(self):
 
         #mouse.get_rel must only be called once a step, don't call elsewhere
         #(because it's relative to the last call)
@@ -83,9 +83,10 @@ class Manager(object):
                 Tool().draw(layer, color, pygame.mouse.get_pos(), 
                             ctrl_pressed, shift_pressed, alt_pressed)
 
-        #SYSTEM EVENTS
-        if event.type == pygame.QUIT:
-            sys.exit(0)
+        for event in pygame.event.get():
+            #SYSTEM EVENTS
+            if event.type == pygame.QUIT:
+                sys.exit(0)
 
-        elif event.type == pygame.VIDEORESIZE:
-            self.resize_window(event.dict['size'])
+            elif event.type == pygame.VIDEORESIZE:
+                self.resize_window(event.dict['size'])

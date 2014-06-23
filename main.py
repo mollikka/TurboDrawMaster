@@ -15,8 +15,7 @@ class System(object):
 
     def step(self):
 
-        for event in pygame.event.get():
-            self.manager.handle(event)
+        self.manager.handle_input()
 
         self.manager.draw()
 
