@@ -1,7 +1,7 @@
 import sys
 import pygame
 
-from overlays import Overlay
+import overlays
 from picture import Picture
 from tools import Tool
 
@@ -10,11 +10,15 @@ class Manager(object):
     def __init__(self):
 
         self.background_color = (0,0,0)
-        self.resize_window((640,480))
+        self.resize_window((800,600))
         self.picture = Picture()
 
         self.active_overlay = None
-        self.test_overlay = Overlay()
+        self.test_overlay = overlays.Overlay()
+        self.color_picker_overlay = overlays.ColorPickerOverlay()
+
+    def get_active_color(self):
+        return self.color_picker_overlay.active_color
 
     def resize_window(self, size):
 
@@ -51,6 +55,7 @@ class Manager(object):
         #mouse.get_rel must only be called once a step, don't call elsewhere
         #(because it's relative to the last call)
         mouse_delta = pygame.mouse.get_rel()
+        mouse_pos = pygame.mouse.get_pos()
 
         mouse_pressed = pygame.mouse.get_pressed()
         mouse_left_pressed, mouse_mid_pressed, mouse_right_pressed = mouse_pressed
@@ -63,15 +68,19 @@ class Manager(object):
         self.active_overlay = None
 
         if ctrl_pressed: self.active_overlay = self.test_overlay
+        if pygame.key.get_pressed()[pygame.K_q]:
+            self.active_overlay = self.color_picker_overlay
 
         if self.active_overlay:
-            #overlay mode
-            pass
+            if mouse_left_pressed:
+                mx,my = mouse_pos
+                self.active_overlay.left_click(mx,my)
         else:
             #drawing mode
             if mouse_left_pressed:
                 layer = self.picture.layers[0]
-                Tool().draw(layer, pygame.mouse.get_pos(), 
+                color = self.get_active_color()
+                Tool().draw(layer, color, pygame.mouse.get_pos(), 
                             ctrl_pressed, shift_pressed, alt_pressed)
 
         #SYSTEM EVENTS
