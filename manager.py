@@ -3,7 +3,7 @@ import pygame
 
 import overlays
 from picture import Picture
-from tools import Tool
+from user_state import User
 
 class Manager(object):
 
@@ -13,12 +13,17 @@ class Manager(object):
         self.resize_window((800,600))
         self.picture = Picture()
 
+        self.user = User()
+
         self.active_overlay = None
-        self.test_overlay = overlays.Overlay()
-        self.color_picker_overlay = overlays.ColorPickerOverlay()
+        self.test_overlay = overlays.Overlay(self.user)
+        self.color_picker_overlay = overlays.ColorPickerOverlay(self.user)
 
     def get_active_color(self):
-        return self.color_picker_overlay.active_color
+        return self.user.active_color
+
+    def get_active_tool(self):
+        return self.user.active_tool
 
     def resize_window(self, size):
 
@@ -67,7 +72,8 @@ class Manager(object):
 
         self.active_overlay = None
 
-        if ctrl_pressed: self.active_overlay = self.test_overlay
+        if ctrl_pressed:
+            self.active_overlay = self.test_overlay
         if pygame.key.get_pressed()[pygame.K_q]:
             self.active_overlay = self.color_picker_overlay
 
@@ -80,7 +86,7 @@ class Manager(object):
             if mouse_left_pressed:
                 layer = self.picture.layers[0]
                 color = self.get_active_color()
-                Tool().draw(layer, color, pygame.mouse.get_pos(), 
+                self.get_active_tool().draw(layer, color, pygame.mouse.get_pos(), 
                             ctrl_pressed, shift_pressed, alt_pressed)
 
         for event in pygame.event.get():

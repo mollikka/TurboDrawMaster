@@ -2,10 +2,11 @@ import pygame
 
 class Overlay(object):
 
-    def __init__(self):
+    def __init__(self, user):
         self.name = "Overlay"
         self.text = pygame.font.SysFont(None,48)
         self.buttons = [] #[[button, location], ..]
+        self.user = user
 
     def draw(self, window_size):
 
@@ -29,10 +30,9 @@ import colorsys
 
 class ColorPickerOverlay(Overlay):
 
-    def __init__(self):
-        super(ColorPickerOverlay,self).__init__()
+    def __init__(self, user):
+        super(ColorPickerOverlay,self).__init__(user)
         self.name = "Color Picker"
-        self.active_color = (0,0,0)
 
         self.buttons.append([ColorButton(self),(100,100)])
         self.buttons.append([ActiveColorButton(self),(0,100)])
@@ -60,7 +60,7 @@ class ColorButton(Button):
 
     def left_click(self, mouse_x, mouse_y):
         if self.rect.collidepoint((mouse_x,mouse_y)):
-            self.parent.active_color = self.coords_to_color(mouse_x,mouse_y)
+            self.parent.user.active_color = self.coords_to_color(mouse_x,mouse_y)
 
     def coords_to_color(self, x, y):
         width,height = self.rect.size
@@ -88,5 +88,5 @@ class ActiveColorButton(Button):
         pass
 
     def draw(self):
-        self.texture.fill(self.parent.active_color)
+        self.texture.fill(self.parent.user.active_color)
         return self.texture
