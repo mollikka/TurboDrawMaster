@@ -19,6 +19,7 @@ class Manager(object):
         self.active_overlay = None
         self.test_overlay = overlay.Overlay(self.user)
         self.color_picker_overlay = overlays.ColorPickerOverlay(self.user)
+        self.custom_palette_overlay = overlays.CustomPaletteOverlay(self.user)
 
     def get_active_color(self):
         return self.user.active_color
@@ -77,11 +78,17 @@ class Manager(object):
             self.active_overlay = self.test_overlay
         if pygame.key.get_pressed()[pygame.K_q]:
             self.active_overlay = self.color_picker_overlay
+        if pygame.key.get_pressed()[pygame.K_q] and shift_pressed:
+            self.active_overlay = self.custom_palette_overlay
+
 
         if self.active_overlay:
             if mouse_left_pressed:
                 mx,my = mouse_pos
                 self.active_overlay.left_click(mx,my)
+            if mouse_right_pressed:
+                mx,my = mouse_pos
+                self.active_overlay.right_click(mx,my)
         else:
             #drawing mode
             if mouse_left_pressed:

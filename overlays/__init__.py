@@ -1,1 +1,2 @@
 from color_picker import ColorPickerOverlay
+from custom_palette import CustomPaletteOverlay

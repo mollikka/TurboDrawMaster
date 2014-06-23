@@ -26,6 +26,13 @@ class Overlay(object):
             x,y = mouse_x - bx, mouse_y - by
             button.left_click(x,y)
 
+    def right_click(self, mouse_x, mouse_y):
+
+        for button,location in self.buttons:
+            bx,by = location
+            x,y = mouse_x - bx, mouse_y - by
+            button.right_click(x,y)
+
 class Button(object):
 
     def __init__(self, parent):
@@ -37,5 +44,10 @@ class Button(object):
         return self.texture
 
     def left_click(self, mouse_x, mouse_y):
-        if self.rect.hit((mouse_x,mouse_y)):
+        if self.rect.collidepoint((mouse_x,mouse_y)):
             print "CLICK!"
+
+    def right_click(self, mouse_x, mouse_y):
+        if self.rect.collidepoint((mouse_x,mouse_y)):
+            print "CLICK!"
+
