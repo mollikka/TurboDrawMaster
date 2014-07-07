@@ -1,4 +1,4 @@
-TurboDrawMaster
+Turbo Draw Master
 ===============
 _Pixel art drawing reimagined_
 
