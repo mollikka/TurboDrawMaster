@@ -3,7 +3,7 @@ import pygame
 
 import overlay
 import overlays
-from picture import Picture
+from picture import Picture, View
 from user_state import User
 
 class Manager(object):
@@ -13,6 +13,7 @@ class Manager(object):
         self.background_color = (0,0,0)
         self.resize_window((800,600))
         self.picture = Picture()
+        self.view = View(self.picture)
 
         self.user = User()
 
@@ -39,11 +40,11 @@ class Manager(object):
         self.window.fill(self.background_color)
 
         #draw the picture
-        if self.picture:
-            pic_surf = self.picture.draw()
+        if self.view:
+            win_size = self.window.get_size()
+            pic_surf = self.view.draw(win_size)
 
-            disp_pic_surf = self.apply_camera_to_picture(pic_surf)
-            self.window.blit(disp_pic_surf, (0,0))
+            self.window.blit(pic_surf, (0,0))
 
         #draw the active overlay
         if self.active_overlay:
@@ -52,10 +53,6 @@ class Manager(object):
 
         #update the screen
         pygame.display.flip()
-
-    def apply_camera_to_picture(self, pic_surf):
-
-        return pic_surf
 
     def handle_input(self):
 
@@ -94,8 +91,12 @@ class Manager(object):
             if mouse_left_pressed:
                 layer = self.picture.layers[0]
                 color = self.get_active_color()
-                self.get_active_tool().draw(layer, color, pygame.mouse.get_pos(), 
+                mousepos = self.view.position_screen_to_picture(pygame.mouse.get_pos())
+                self.get_active_tool().draw(layer, color, mousepos, 
                             ctrl_pressed, shift_pressed, alt_pressed)
+
+            if mouse_right_pressed:
+                self.view.set_panning_relative(mouse_delta)
 
         for event in pygame.event.get():
             #SYSTEM EVENTS
